@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - KiRA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --tertiary-bg: #334155;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border-color: #334155;
+        }
+
+        body {
+            background-color: #1e2a38;
+            background-image: url("{{ url_for('static', filename='images/bg.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 58, 87, 0.65);
+            backdrop-filter: blur(2px);
+            z-index: -1;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .back-btn {
+            background: var(--accent-color);
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Settings Container */
+        .settings-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        .settings-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .settings-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .settings-header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .setting-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--tertiary-bg);
+            transition: 0.4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--tertiary-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        /* Select Dropdown */
+        select {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            z-index: 10001;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger-color);
+        }
+
+        .danger-zone h2 {
+            color: var(--danger-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="/chat" class="logo">
+            <i class="fas fa-robot"></i> KiRA
+        </a>
+        <div class="nav-links">
+            <a href="/about"><i class="fas fa-info-circle"></i> About us</a>
+            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+            <a href="/chat" class="back-btn">
+                <i class="fas fa-comments"></i> Back to Chat
+            </a>
+        </div>
+    </div>
+
+    <!-- Settings Container -->
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1><i class="fas fa-cog"></i> Settings & Preferences</h1>
+            <p>Customize your KiRA experience</p>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-card">
+            <h2><i class="fas fa-bell"></i> Notifications</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Email Notifications</h3>
+                    <p>Receive updates and announcements via email</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="email-notifications" onchange="saveSetting('email_notifications', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Browser Notifications</h3>
+                    <p>Get notified about important updates</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="browser-notifications" onchange="saveSetting('browser_notifications', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-card">
+            <h2><i class="fas fa-shield-alt"></i> Privacy</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Save Chat History</h3>
+                    <p>Store your conversations for future reference</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="save-history" checked onchange="saveSetting('save_history', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Analytics</h3>
+                    <p>Help us improve by sharing usage data</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="analytics" checked onchange="saveSetting('analytics', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Appearance Settings -->
+        <div class="settings-card">
+            <h2><i class="fas fa-palette"></i> Appearance</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Theme</h3>
+                    <p>Choose your preferred color scheme</p>
+                </div>
+                <select id="theme-select" onchange="saveSetting('theme', this.value)">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                    <option value="auto">Auto</option>
+                </select>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Font Size</h3>
+                    <p>Adjust text size for better readability</p>
+                </div>
+                <select id="font-size-select" onchange="saveSetting('font_size', this.value)">
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="settings-card">
+            <h2><i class="fas fa-database"></i> Data Management</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Export Data</h3>
+                    <p>Download all your data in JSON format</p>
+                </div>
+                <button class="btn btn-secondary" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Clear Chat History</h3>
+                    <p>Delete all your conversation history</p>
+                </div>
+                <button class="btn btn-secondary" onclick="clearHistory()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-card danger-zone">
+            <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Delete Account</h3>
+                    <p>Permanently delete your account and all data</p>
+                </div>
+                <button class="btn btn-danger" onclick="deleteAccount()">
+                    <i class="fas fa-user-times"></i> Delete Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user settings on page load
+        window.onload = async function() {
+            try {
+                const response = await fetch('/get-user-settings');
+                const data = await response.json();
+                
+                if (data.success && data.settings) {
+                    // Apply settings to UI
+                    document.getElementById('email-notifications').checked = data.settings.email_notifications || false;
+                    document.getElementById('browser-notifications').checked = data.settings.browser_notifications || false;
+                    document.getElementById('save-history').checked = data.settings.save_history !== false;
+                    document.getElementById('analytics').checked = data.settings.analytics !== false;
+                    document.getElementById('theme-select').value = data.settings.theme || 'dark';
+                    document.getElementById('font-size-select').value = data.settings.font_size || 'medium';
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        };
+
+        // Save individual setting
+        async function saveSetting(key, value) {
+            try {
+                const response = await fetch('/update-user-settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ [key]: value })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Setting saved successfully', 'success');
+                } else {
+                    showToast('Failed to save setting', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving setting:', error);
+                showToast('Error saving setting', 'error');
+            }
+        }
+
+        // Export user data
+        async function exportData() {
+            try {
+                const response = await fetch('/export-user-data');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Create download link
+                    const blob = new Blob([JSON.stringify(data.data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `kira-data-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    showToast('Data exported successfully', 'success');
+                } else {
+                    showToast('Failed to export data', 'error');
+                }
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                showToast('Error exporting data', 'error');
+            }
+        }
+
+        // Clear chat history
+        async function clearHistory() {
+            showConfirmToast('Are you sure you want to clear all your chat history? This action cannot be undone.', async () => {
+                try {
+                    const response = await fetch('/clear-chat-history', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showToast('Chat history cleared successfully', 'success');
+                    } else {
+                        showToast('Failed to clear history', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error clearing history:', error);
+                    showToast('Error clearing history', 'error');
+                }
+            }, {
+                title: 'Clear Chat History',
+                type: 'danger',
+                confirmText: 'Clear All',
+                cancelText: 'Cancel'
+            });
+        }
+
+        // Delete account
+        async function deleteAccount() {
+            showConfirmToast('This will permanently delete your account and all data. Type "DELETE" to confirm:', async (inputValue) => {
+                if (inputValue !== 'DELETE') {
+                    showToast('Confirmation text did not match. Account not deleted.', 'error');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/delete-account', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showToast('Account deleted successfully. Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 2000);
+                    } else {
+                        showToast('Failed to delete account', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting account:', error);
+                    showToast('Error deleting account', 'error');
+                }
+            }, {
+                title: 'Delete Account',
+                type: 'danger',
+                confirmText: 'Delete Forever',
+                cancelText: 'Cancel',
+                requireInput: true,
+                inputPlaceholder: 'Type DELETE to confirm',
+                validateInput: (value) => value === 'DELETE'
+            });
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.4s ease-out';
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // Confirmation Toast
+        function showConfirmToast(message, onConfirm, options = {}) {
+            return new Promise((resolve) => {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(30, 41, 59, 0.98);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid #334155;
+                    padding: 24px;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                    z-index: 10002;
+                    min-width: 320px;
+                    max-width: 450px;
+                    animation: fadeIn 0.2s ease;
+                `;
+                
+                const icon = options.type === 'danger' ? '⚠️' : options.type === 'info' ? 'ℹ️' : '❓';
+                const confirmBtnColor = options.type === 'danger' ? '#ef4444' : '#6366f1';
+                
+                toast.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: #f8fafc; font-weight: 600; font-size: 16px;">
+                        <span style="font-size: 24px;">${icon}</span>
+                        <span>${options.title || 'Confirm Action'}</span>
+                    </div>
+                    <div style="color: #cbd5e1; margin-bottom: 20px; line-height: 1.5;">
+                        ${message}
+                    </div>
+                    ${options.requireInput ? `
+                        <input type="text" id="confirm-input" placeholder="${options.inputPlaceholder || 'Type to confirm'}" 
+                               style="width: 100%; padding: 10px; margin-bottom: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #f8fafc; font-size: 14px;" />
+                    ` : ''}
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="cancel-btn" style="padding: 10px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; background: #334155; color: #f8fafc; transition: all 0.3s ease;">
+                            ${options.cancelText || 'Cancel'}
+                        </button>
+                        <button class="confirm-btn" style="padding: 10px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; background: ${confirmBtnColor}; color: white; transition: all 0.3s ease;">
+                            ${options.confirmText || 'OK'}
+                        </button>
+                    </div>
+                `;
+                
+                const backdrop = document.createElement('div');
+                backdrop.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 10001;
+                    animation: fadeIn 0.2s ease;
+                `;
+                
+                document.body.appendChild(backdrop);
+                document.body.appendChild(toast);
+                
+                const closeToast = (confirmed, inputValue = null) => {
+                    toast.style.animation = 'fadeOut 0.2s ease';
+                    backdrop.style.animation = 'fadeOut 0.2s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                        document.body.removeChild(backdrop);
+                        resolve({ confirmed, inputValue });
+                        if (confirmed && onConfirm) onConfirm(inputValue);
+                    }, 200);
+                };
+                
+                const confirmBtn = toast.querySelector('.confirm-btn');
+                const cancelBtn = toast.querySelector('.cancel-btn');
+                const input = toast.querySelector('#confirm-input');
+                
+                cancelBtn.onclick = () => closeToast(false);
+                confirmBtn.onclick = () => {
+                    if (options.requireInput) {
+                        const value = input.value;
+                        if (options.validateInput && !options.validateInput(value)) {
+                            input.style.borderColor = '#ef4444';
+                            return;
+                        }
+                        closeToast(true, value);
+                    } else {
+                        closeToast(true);
+                    }
+                };
+                backdrop.onclick = () => closeToast(false);
+                
+                // Hover effects
+                cancelBtn.onmouseenter = () => cancelBtn.style.background = '#475569';
+                cancelBtn.onmouseleave = () => cancelBtn.style.background = '#334155';
+                confirmBtn.onmouseenter = () => confirmBtn.style.background = options.type === 'danger' ? '#dc2626' : '#4f46e5';
+                confirmBtn.onmouseleave = () => confirmBtn.style.background = confirmBtnColor;
+                
+                // Focus input if present
+                if (input) input.focus();
+            });
+        }
+    </script>
+</body>
+</html>
+
+
