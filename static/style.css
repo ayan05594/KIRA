@@ -189,10 +189,293 @@
     }
   }
   
-  /* Responsive Design */
-  @media (max-width: 768px) {
+  /* ============================================
+     COMPREHENSIVE MOBILE RESPONSIVE DESIGN
+     ============================================ */
+  
+  /* Tablet and Small Desktop */
+  @media (max-width: 1024px) {
     .sidebar {
-      display: none;
+      width: 220px;
+    }
+    
+    .message-content {
+      max-width: 80%;
+    }
+  }
+  
+  /* Tablet Portrait */
+  @media (max-width: 768px) {
+    .app-container {
+      flex-direction: column;
+    }
+    
+    .sidebar {
+      position: fixed;
+      left: -100%;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      z-index: 1000;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .sidebar.active {
+      left: 0;
+    }
+    
+    .messages-container {
+      padding: 15px 10px;
+    }
+    
+    .message {
+      padding: 0 10px;
+    }
+    
+    .message-content {
+      max-width: 85%;
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+    
+    .chat-input {
+      padding: 15px 10px;
+      gap: 8px;
+    }
+    
+    .chat-input input {
+      padding: 12px;
+      font-size: 14px;
+    }
+    
+    .chat-input button {
+      padding: 12px 20px;
+      font-size: 14px;
+    }
+    
+    .outer-container {
+      padding: 20px;
+      max-width: 95%;
+    }
+    
+    .form-container {
+      padding: 25px 20px;
+      max-width: 100%;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 350px;
+      padding: 25px 30px;
+    }
+  }
+  
+  /* Mobile Landscape */
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 20px;
+    }
+    
+    input {
+      padding: 10px;
+      font-size: 13px;
+    }
+    
+    button {
+      padding: 10px;
+      font-size: 14px;
+    }
+    
+    .message-content {
+      max-width: 90%;
+      padding: 10px 14px;
+    }
+  }
+  
+  /* Mobile Portrait */
+  @media (max-width: 480px) {
+    .outer-container {
+      padding: 15px;
+      border-radius: 15px;
+    }
+    
+    .form-container {
+      padding: 20px 15px;
+      border-radius: 10px;
+    }
+    
+    .container {
+      width: 100%;
+      padding: 20px 25px;
+    }
+    
+    h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    
+    input {
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    
+    button {
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+    
+    .footer {
+      font-size: 11px;
+      margin-top: 15px;
+    }
+    
+    .chat-window {
+      height: 100vh;
+    }
+    
+    .messages-container {
+      padding: 10px 5px;
+    }
+    
+    .message {
+      margin-bottom: 20px;
+      padding: 0 5px;
+    }
+    
+    .message-content {
+      max-width: 92%;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    
+    .message-code {
+      padding: 0.75rem;
+      font-size: 12px;
+    }
+    
+    .chat-input {
+      padding: 12px 8px;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+    
+    .chat-input input {
+      padding: 10px 12px;
+      font-size: 13px;
+      min-width: 0;
+      flex: 1;
+    }
+    
+    .chat-input button {
+      padding: 10px 15px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    
+    .profile {
+      margin-bottom: 20px;
+    }
+    
+    .profile-pic {
+      width: 35px;
+      height: 35px;
+    }
+    
+    .history-item {
+      padding: 8px;
+      font-size: 13px;
+    }
+    
+    .reaction-button {
+      font-size: 0.9rem;
+      padding: 0.2rem;
+    }
+    
+    .message-actions {
+      gap: 0.3rem;
+      margin-top: 0.3rem;
+    }
+  }
+  
+  /* Extra Small Mobile */
+  @media (max-width: 375px) {
+    .outer-container {
+      padding: 10px;
+    }
+    
+    .form-container {
+      padding: 18px 12px;
+    }
+    
+    .container {
+      padding: 18px 20px;
+    }
+    
+    h2 {
+      font-size: 16px;
+    }
+    
+    input {
+      padding: 9px 10px;
+      font-size: 12px;
+    }
+    
+    button {
+      padding: 9px 12px;
+      font-size: 13px;
+    }
+    
+    .message-content {
+      max-width: 95%;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+    
+    .chat-input input {
+      padding: 9px 10px;
+      font-size: 12px;
+    }
+    
+    .chat-input button {
+      padding: 9px 12px;
+      font-size: 12px;
+    }
+  }
+  
+  /* Orientation-specific styles */
+  @media (max-width: 768px) and (orientation: landscape) {
+    .sidebar {
+      width: 240px;
+    }
+    
+    .messages-container {
+      max-height: calc(100vh - 140px);
+    }
+    
+    .chat-input input,
+    .chat-input button {
+      padding: 8px 15px;
+    }
+  }
+  
+  /* Touch device optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    button,
+    .history-item,
+    .reaction-button,
+    input[type="checkbox"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    .chat-input button {
+      min-width: 60px;
+    }
+    
+    .history-item {
+      padding: 12px;
     }
   }
   
