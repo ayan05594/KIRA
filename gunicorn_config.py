@@ -7,12 +7,14 @@ import os
 bind = f"0.0.0.0:{os.getenv('PORT', '5001')}"
 backlog = 2048
 
-# Worker processes
-workers = multiprocessing.cpu_count() * 2 + 1
+# Worker processes - Optimized for Render Free Tier
+# Use fewer workers to avoid memory issues on free tier
+workers = min(multiprocessing.cpu_count() * 2 + 1, 3)  # Max 3 workers for free tier
 worker_class = 'sync'
 worker_connections = 1000
-timeout = 120
+timeout = 300  # Increased timeout for slow MongoDB connections on free tier
 keepalive = 5
+graceful_timeout = 120  # Give workers time to finish requests before killing them
 
 # Restart workers after this many requests to prevent memory leaks
 max_requests = 1000
